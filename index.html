@@ -7,9 +7,9 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1800px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 40px 80px;
+            padding: 20px;
             background-color: #f5f5f5;
         }
         .form-group {
@@ -23,7 +23,8 @@
             color: #333;
         }
         input {
-            width: 400px;
+            width: 90%;
+            max-width: 400px;
             padding: 12px;
             border: 2px solid #ddd;
             border-radius: 6px;
@@ -35,6 +36,8 @@
             outline: none;
         }
         button {
+            width: 90%;
+            max-width: 400px;
             padding: 12px 30px;
             background-color: #2196F3;
             color: white;
@@ -54,23 +57,39 @@
             background-color: white;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto;
+            display: block;
         }
         th, td {
             border: 1px solid #eee;
             padding: 12px 15px;
             text-align: left;
+            min-width: 120px;
         }
         th {
             background-color: #4CAF50;
             color: white;
             font-weight: bold;
+            position: sticky;
+            top: 0;
         }
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
         tr:hover {
             background-color: #f5f5f5;
+        }
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 14px;
+            }
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
@@ -94,7 +113,7 @@
     
     <button onclick="searchContacts()" style="display: block; margin: 0 auto;">Search</button>
 
-    <div id="results">
+    <div id="results" style="overflow-x: auto;">
         <table id="contactsTable" style="display: none;">
             <thead>
                 <tr>
@@ -166,7 +185,7 @@
                     if (field === 'linkedin_url' && contact[field] && contact[field] !== '-') {
                         const link = document.createElement('a');
                         link.href = contact[field];
-                        link.textContent = contact[field];
+                        link.textContent = 'LinkedIn Profile';
                         link.target = '_blank';
                         cell.appendChild(link);
                     } else {
