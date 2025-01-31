@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Details Dashboard</title>
+    <title>Contact Details</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,7 +75,7 @@
     </style>
 </head>
 <body>
-    <h1 style="text-align: center;">Contact Details Dashboard</h1>
+    <h1 style="text-align: center;">Contact Details</h1>
     
     <div class="form-group">
         <label for="companyName">Company Name:</label>
@@ -98,10 +98,9 @@
         <table id="contactsTable" style="display: none;">
             <thead>
                 <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Primary Phone</th>
+                    <th>Name</th>
                     <th>Work Phone</th>
+                    <th>Primary Phone</th>
                     <th>Organization</th>
                     <th>Title</th>
                     <th>Email</th>
@@ -160,8 +159,7 @@
 
             contacts.forEach(contact => {
                 const row = tbody.insertRow();
-                const fields = ['first_name', 'last_name', 'primary_phone', 'phone_number', 
-                              'organization', 'title', 'email', 'linkedin_url'];
+                const fields = ['name', 'phone_number', 'primary_phone', 'organization', 'title', 'email', 'linkedin_url'];
                 
                 fields.forEach(field => {
                     const cell = row.insertCell();
