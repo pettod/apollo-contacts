@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Details Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 300px;
+            padding: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Contact Details Dashboard</h1>
+    
+    <div class="form-group">
+        <label for="companyName">Company Name:</label>
+        <input type="text" id="companyName" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="titles">Titles (comma separated):</label>
+        <input type="text" id="titles" placeholder="CEO, COO, CTO">
+    </div>
+    
+    <div class="form-group">
+        <label for="maxResults">Maximum Results:</label>
+        <input type="number" id="maxResults" min="1" value="10">
+    </div>
+    
+    <button onclick="searchContacts()">Search</button>
+
+    <div id="results">
+        <table id="contactsTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Primary Phone</th>
+                    <th>Work Phone</th>
+                    <th>Organization</th>
+                    <th>Title</th>
+                    <th>Email</th>
+                    <th>LinkedIn URL</th>
+                </tr>
+            </thead>
+            <tbody id="contactsBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function searchContacts() {
+            const companyName = document.getElementById('companyName').value;
+            const titles = document.getElementById('titles').value;
+            const maxResults = document.getElementById('maxResults').value;
+
+            const searchData = {
+                company_name: companyName,
+                titles: titles.split(',').map(t => t.trim()),
+                max_results: parseInt(maxResults)
+            };
+
+            try {
+                const response = await fetch('/search_contacts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(searchData)
+                });
+
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while fetching the data');
+            }
+        }
+
+        function displayResults(contacts) {
+            const table = document.getElementById('contactsTable');
+            const tbody = document.getElementById('contactsBody');
+            tbody.innerHTML = '';
+
+            contacts.forEach(contact => {
+                const row = tbody.insertRow();
+                const fields = ['first_name', 'last_name', 'primary_phone', 'phone_number', 
+                              'organization', 'title', 'email', 'linkedin_url'];
+                
+                fields.forEach(field => {
+                    const cell = row.insertCell();
+                    if (field === 'linkedin_url' && contact[field] && contact[field] !== '-') {
+                        const link = document.createElement('a');
+                        link.href = contact[field];
+                        link.textContent = contact[field];
+                        link.target = '_blank';
+                        cell.appendChild(link);
+                    } else {
+                        cell.textContent = contact[field] || '-';
+                    }
+                });
+            });
+
+            table.style.display = 'table';
+        }
+    </script>
+</body>
+</html>
