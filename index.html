@@ -7,9 +7,9 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1200px;
+            max-width: 1800px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 40px 80px;
             background-color: #f5f5f5;
         }
         .form-group {
@@ -114,6 +114,17 @@
     </div>
 
     <script>
+        // Add event listeners for enter key on input fields
+        document.getElementById('companyName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchContacts();
+        });
+        document.getElementById('titles').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchContacts();
+        });
+        document.getElementById('maxResults').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchContacts();
+        });
+
         async function searchContacts() {
             const companyName = document.getElementById('companyName').value;
             const titles = document.getElementById('titles').value;
