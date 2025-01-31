@@ -20,11 +20,11 @@ def search_contacts():
     max_results = data.get('max_results', 10)
     
     # Call Apollo API
-    url = "https://api.apollo.io/v1/contacts/search"
+    url = "https://api.apollo.io/v1/mixed_people/search"
     params = {
         "api_key": api_key,
         "q_organization_name": company_name,
-        "per_page": max_results
+        "per_page": max_results,
     }
     
     if titles:
@@ -36,7 +36,9 @@ def search_contacts():
         
         # Format response data
         contacts = []
-        for contact in apollo_data['contacts']:
+        for contact in apollo_data['people']:
+            person_id = contact.get("id", "-")
+            unlocked_details = unlock_contact_details(person_id)
             primary_phone = contact.get("primary_phone", {}).get("number", "-")
             phone_number = contact.get("phone_numbers", [{}])[0].get("raw_number", "-") if contact.get("phone_numbers") else "-"
             
@@ -45,9 +47,9 @@ def search_contacts():
                 "last_name": contact.get("last_name", "-"),
                 "primary_phone": primary_phone,
                 "phone_number": phone_number,
-                "organization": contact.get("organization_name", "-"),
+                "organization": contact.get("organization", {}).get("name", "-"),
                 "title": contact.get("title", "-"),
-                "email": contact.get("email", "-"),
+                "email": unlocked_details["email"],
                 "linkedin_url": contact.get("linkedin_url", "-")
             })
             
@@ -58,5 +60,32 @@ def search_contacts():
         response.status = 500
         return json.dumps({"error": str(e)})
 
+
+def unlock_contact_details(person_id):
+    url = "https://api.apollo.io/v1/people/match"
+
+    payload = {
+        "api_key": api_key,
+        "id": person_id,  # Contact's Apollo ID
+    }
+
+    try:
+        response = requests.post(url, json=payload)
+        response.raise_for_status()  # Raise an error for bad responses (4xx, 5xx)
+
+        data = response.json()
+        contact = data.get("person", {})
+        print(contact)
+
+        # Extract unlocked details
+        email = contact.get("email", "-")
+        phone = contact.get("phone_number", "-")
+
+        return {"email": email, "phone": phone}
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data: {e}")
+        return None
+
 if __name__ == '__main__':
-    run(host='localhost', port=8080, debug=True)
+    run(host='0.0.0.0', port=888, debug=True)
