@@ -43,8 +43,7 @@ def search_contacts():
             phone_number = contact.get("phone_numbers", [{}])[0].get("raw_number", "-") if contact.get("phone_numbers") else "-"
             
             contacts.append({
-                "first_name": contact.get("first_name", "-"),
-                "last_name": contact.get("last_name", "-"),
+                "name": (contact.get("first_name") or "-") + " " + (contact.get("last_name") or "-"),
                 "primary_phone": primary_phone,
                 "phone_number": phone_number,
                 "organization": contact.get("organization", {}).get("name", "-"),
