@@ -1,6 +1,17 @@
 from bottle import route, run, template, request, response
 import requests
 import json
+import argparse
+
+# Parse command line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('--global', default=None, action='store_true', help='Use 0.0.0.0 instead of localhost')
+parser.add_argument('--port', default=9999, type=int, help='Port to run the server on')
+args = parser.parse_args()
+
+# Set host based on args
+HOST = '0.0.0.0' if getattr(args, 'global') else 'localhost'
+PORT = args.port
 
 # Load Apollo API key
 with open('apollo_api.txt', 'r') as f:
@@ -87,4 +98,4 @@ def unlock_contact_details(person_id):
         return None
 
 if __name__ == '__main__':
-    run(host='0.0.0.0', port=888, debug=True)
+    run(host=HOST, port=PORT, debug=True)

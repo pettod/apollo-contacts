@@ -10,13 +10,14 @@ pip install requests
 
 ## Run
 
-Add your Apollo API key to the `apollo_api.txt` file.
+Create and add your Apollo API key to the `apollo_api.txt` file.
 
 ```bash
-python backend.py
+python backend.py --global --port 9999
 ```
 
-Open the [http://localhost:888](http://localhost:888) in your browser.
+Open the [http://localhost:9999](http://localhost:9999) in your browser.
 
+## See the public IP4 address on MacBook
 
-
+`ipconfig getifaddr en0`
